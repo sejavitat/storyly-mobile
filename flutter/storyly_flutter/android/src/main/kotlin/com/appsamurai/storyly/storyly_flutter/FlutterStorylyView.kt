@@ -42,13 +42,16 @@ class FlutterStorylyView(
     private var cartUpdateSuccessFailCallbackMap: MutableMap<String, Pair<((STRCart?) -> Unit)?, ((STRCartEventResult) -> Unit)?>> = mutableMapOf()
 
     private val methodChannel: MethodChannel = MethodChannel(messenger, "com.appsamurai.storyly/flutter_storyly_view_$viewId").apply {
-        setMethodCallHandler { call, _ ->
+        setMethodCallHandler { call, result ->
             val callArguments = call.arguments as? Map<String, *>
             when (call.method) {
                 "refresh" -> storylyView.refresh()
                 "resumeStory" -> storylyView.resumeStory()
                 "pauseStory" -> storylyView.pauseStory()
-                "closeStory" -> storylyView.closeStory()
+                "closeStory" -> {
+                    storylyView.closeStory()
+                    result.success("closed")
+                }
                 "openStory" -> storylyView.openStory(
                     callArguments?.get("storyGroupId") as? String ?: "",
                     callArguments?.getOrElse("storyId") { null } as? String
