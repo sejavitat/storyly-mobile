@@ -14,7 +14,7 @@ internal class FlutterStorylyViewWrapper: UIView, StorylyDelegate {
         self.methodChannel = methodChannel
         super.init(frame: frame)
         
-        self.methodChannel.setMethodCallHandler { [weak self] call, _ in
+        self.methodChannel.setMethodCallHandler { [weak self] call, result in
             guard let self = self else { return }
             let callArguments = call.arguments as? [String: Any]
             switch call.method {
